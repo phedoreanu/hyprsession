@@ -45,7 +45,16 @@ pub struct LocalSession {
     pub simulate: bool,
     pub load_time:  u64, 
     pub adjust_clients_only: bool,
-    pub save_duplicate_pids: bool
+    pub save_duplicate_pids: bool,
+    pub excluded_classes: Vec<String>,
+}
+
+/// True when the window's class is on the exclusion list. Both the initial
+/// class and the current class are compared, ignoring ASCII case.
+pub fn class_excluded(excluded: &[String], initial_class: &str, class: &str) -> bool {
+    excluded
+        .iter()
+        .any(|e| e.eq_ignore_ascii_case(initial_class) || e.eq_ignore_ascii_case(class))
 }
 
 struct ClientAdjustmentContext<'a> {
@@ -263,6 +272,10 @@ impl Session for LocalSession {
         let xdg_map: HashMap<String, String> = crate::command_faker::build_xdg_command_map();
 
         for info in client_info.iter().rev() {
+            if class_excluded(&self.excluded_classes, &info.initial_class, &info.class) {
+                println!("Skipping excluded class '{}': {}", info.initial_class, info.title);
+                continue;
+            }
             saved_clients.push(info.clone());
             if !self.save_duplicate_pids && pids.contains(&info.pid) {
                 continue;
@@ -370,5 +383,18 @@ impl Session for LocalSession {
         } else {
             println!("Failed to delete session: {}", name);
         }
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::class_excluded;
+
+    #[test]
+    fn excluded_class_matches_initial_or_current_class_ignoring_case() {
+        let excluded = vec![String::from("org.omarchy.terminal")];
+        assert!(class_excluded(&excluded, "org.omarchy.terminal", "foot"));
+        assert!(class_excluded(&excluded, "foot", "ORG.Omarchy.Terminal"));
+        assert!(!class_excluded(&excluded, "foot", "foot"));
+        assert!(!class_excluded(&[], "org.omarchy.terminal", "org.omarchy.terminal"));
     }
 }

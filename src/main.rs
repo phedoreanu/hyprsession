@@ -68,6 +68,12 @@ struct Args {
     /// Only adjust exiting clients without launching new programs
     #[arg(long, default_value_t = false)]
     adjust_clients_only: bool,
+
+    /// Window class that is never saved, so it is not relaunched when the
+    /// session loads. Matched case-insensitively against initial_class and
+    /// class. Repeat the flag for more classes.
+    #[arg(long = "exclude-class", value_name = "CLASS")]
+    exclude_class: Vec<String>,
 }
 
 fn migration_check(session_path: &str) {
@@ -112,6 +118,7 @@ fn main() -> hyprland::Result<()> {
         adjust_clients_only: args.adjust_clients_only,
         simulate: args.simulate,
         save_duplicate_pids: false,
+        excluded_classes: args.exclude_class.clone(),
     };
 
     match args.mode {

@@ -79,6 +79,12 @@ Only simulate loading and clearing of sessions
 When loading a session this tell Hyprsession to not clear the current session and restart programs. 
 Instead it moves the existing clients to match the saved session.
 
+### --exclude-class <class>
+Never save windows with this class, so they are not relaunched when the session loads. The value is compared
+with the window's `initial_class` and `class`, ignoring case. Repeat the flag for more classes. Useful for
+transient helper terminals: Omarchy's `org.omarchy.terminal` windows, for example, would otherwise re-run their
+command (such as `omarchy-update`) with no visible window at the next login.
+
 ### --mode <mode> (depreciated)
 Sets the mode the program runs in 
 * Default - Loads the session at startup the saves the current session at regular intervals.
