@@ -17,6 +17,7 @@ fn test_load_session_with_nonexistent_file() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // This should not panic or fail when the session file doesn't exist
@@ -40,6 +41,7 @@ fn test_load_session_with_empty_file() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // This should handle empty files gracefully
@@ -73,6 +75,7 @@ fn test_load_session_with_sample_data() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Load the session in simulate mode (won't actually execute commands)
@@ -98,6 +101,7 @@ fn test_load_session_with_malformed_data() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
     
     // This should handle malformed data gracefully
@@ -119,6 +123,7 @@ fn test_session_trait_save_method() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Test saving a session (should work even in simulate mode for basic functionality)
@@ -140,6 +145,7 @@ fn test_session_trait_list_method() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Create some mock session directories
@@ -170,6 +176,7 @@ fn test_session_trait_delete_method() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Create a mock session directory
@@ -199,6 +206,7 @@ fn test_session_trait_clear_method() {
         adjust_clients_only: false,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Test clearing session (should work in simulate mode)
@@ -225,6 +233,7 @@ fn test_local_session_struct_creation() {
         adjust_clients_only: false,
         save_duplicate_pids: true,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Test simulation configuration
@@ -235,6 +244,7 @@ fn test_local_session_struct_creation() {
         adjust_clients_only: true,
         save_duplicate_pids: false,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     // Verify fields are set correctly

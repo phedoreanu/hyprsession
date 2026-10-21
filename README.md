@@ -85,6 +85,12 @@ with the window's `initial_class` and `class`, ignoring case. Repeat the flag fo
 transient helper terminals: Omarchy's `org.omarchy.terminal` windows, for example, would otherwise re-run their
 command (such as `omarchy-update`) with no visible window at the next login.
 
+### --bare-class <class>
+Save windows with this class as their program alone, without the arguments they were started with. Matched like
+`--exclude-class`; repeat the flag for more classes. Meant for browsers, which restore their own tabs: a browser
+another program started with a URL (a Nextcloud login page, say) keeps that URL in its command line, so the page
+would open again at every login, and the relaunched browser would carry it into the next save.
+
 ### --mode <mode> (depreciated)
 Sets the mode the program runs in 
 * Default - Loads the session at startup the saves the current session at regular intervals.

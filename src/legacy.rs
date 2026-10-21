@@ -61,6 +61,7 @@ pub fn main() -> hyprland::Result<()> {
         simulate: args.simulate,
         save_duplicate_pids: args.save_duplicate_pids,
         excluded_classes: vec![],
+        bare_classes: vec![],
     };
 
     if args.save_interval == 0 {

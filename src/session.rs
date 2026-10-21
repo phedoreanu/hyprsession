@@ -47,6 +47,7 @@ pub struct LocalSession {
     pub adjust_clients_only: bool,
     pub save_duplicate_pids: bool,
     pub excluded_classes: Vec<String>,
+    pub bare_classes: Vec<String>,
 }
 
 /// True when the window's class is on the exclusion list. Both the initial
@@ -55,6 +56,12 @@ pub fn class_excluded(excluded: &[String], initial_class: &str, class: &str) -> 
     excluded
         .iter()
         .any(|e| e.eq_ignore_ascii_case(initial_class) || e.eq_ignore_ascii_case(class))
+}
+
+/// The program alone, without its arguments: `firefox https://...` becomes
+/// `firefox`.
+pub fn bare_command(cmd: &str) -> String {
+    cmd.split_whitespace().next().unwrap_or("").to_string()
 }
 
 struct ClientAdjustmentContext<'a> {
@@ -284,6 +291,13 @@ impl Session for LocalSession {
             if !cmd.is_ok() {
                 continue;
             }
+            let cmd = cmd.map(|c| {
+                if class_excluded(&self.bare_classes, &info.initial_class, &info.class) {
+                    bare_command(&c)
+                } else {
+                    c
+                }
+            });
             pids.push(info.pid);
 
             let exec_opts: Vec<String> = props
@@ -387,7 +401,14 @@ impl Session for LocalSession {
 }
 #[cfg(test)]
 mod tests {
-    use super::class_excluded;
+    use super::{bare_command, class_excluded};
+
+    #[test]
+    fn bare_command_drops_arguments() {
+        assert_eq!(bare_command("firefox https://example.com/login/v2/flow/abc"), "firefox");
+        assert_eq!(bare_command("firefox"), "firefox");
+        assert_eq!(bare_command(""), "");
+    }
 
     #[test]
     fn excluded_class_matches_initial_or_current_class_ignoring_case() {

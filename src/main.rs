@@ -74,6 +74,14 @@ struct Args {
     /// class. Repeat the flag for more classes.
     #[arg(long = "exclude-class", value_name = "CLASS")]
     exclude_class: Vec<String>,
+
+    /// Window class saved as its program alone, without the arguments it was
+    /// started with. Meant for browsers, which restore their own tabs: a URL
+    /// another program opened the browser with would otherwise be reopened
+    /// at every login. Matched the same way as excluded classes. Repeat the
+    /// flag for more classes.
+    #[arg(long = "bare-class", value_name = "CLASS")]
+    bare_class: Vec<String>,
 }
 
 fn migration_check(session_path: &str) {
@@ -119,6 +127,7 @@ fn main() -> hyprland::Result<()> {
         simulate: args.simulate,
         save_duplicate_pids: false,
         excluded_classes: args.exclude_class.clone(),
+        bare_classes: args.bare_class.clone(),
     };
 
     match args.mode {
